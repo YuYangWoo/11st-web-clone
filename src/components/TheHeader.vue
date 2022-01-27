@@ -1,25 +1,24 @@
 <template>
-  <header>
+  <header :class="{ fixed: isFixed }">
     <div class="inner">
       <div
         class="open-nav-drawer"
-        @click="onNav">
-      </div>
+        @click="onNav('LNB')"></div>
       <a
-        href="/"
+        href="javascript:void(0)"
         class="logo"></a>
       <div class="search">
         <input
           v-model="searchText"
           type="text"
           placeholder="찾고 싶은 상품을 검색해 보세요!"
-          @keypress.enter="search" />
+          @keyup.enter="search" />
         <div
           class="search__icon"
           @click="search"></div>
       </div>
       <div class="ranking">
-      <div
+        <div
           ref="swiper"
           class="swiper">
           <div class="swiper-wrapper">
@@ -81,8 +80,7 @@
           </ul>
         </div>
       </div>
-    
-          <ul class="user-menu">
+      <ul class="user-menu">
         <li class="my">
           <a href="javascript:void(0)"></a>
           <ul class="my__menu">
@@ -109,17 +107,68 @@
       </ul>
     </div>
   </header>
+  <div
+    :class="{ fixed: isFixed }"
+    class="utils">
+    <div class="inner">
+      <ul>
+        <li>
+          <a href="javascript:void(0)">베스트</a>
+        </li>
+        <li>
+          <a href="javascript:void(0)">쿠폰/혜택</a>
+        </li>
+        <li>
+          <a href="javascript:void(0)">기획전</a>
+        </li>
+        <li>
+          <a href="javascript:void(0)">오늘장보기</a>
+        </li>
+        <li>
+          <a href="javascript:void(0)">T공식대리점</a>
+        </li>
+        <li>
+          <a
+            class="shocking-deal"
+            href="javascript:void(0)"></a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
 import Swiper from 'swiper/bundle'
 import 'swiper/css/bundle'
+import dayjs from 'dayjs'
 
 export default {
   data() {
     return {
-      searchText: '',
-      rankings: {}
+       searchText: '',
+      rankings: {},
+      isShowRankingWrap: false,
+      tabIndex: 0,
+      isFixed: false,
+      myMenu: [
+        { name: '나의 쿠폰', href: 'javascript:void(0)' },
+        { name: '주문/배송조회', href: 'javascript:void(0)' },
+        { name: '취소/반품/교환', href: 'javascript:void(0)' },
+        { name: '고객센터', href: 'javascript:void(0)' },
+        { name: '회원정보', href: 'javascript:void(0)' }
+      ]
+    }
+  },
+    computed: {
+    referenceDate () {
+      return dayjs(this.rankings.referenceDate).format('YYYY.MM.DD HH:mm')
+    },
+    filteredRankings () {
+      return this.rankings.rankings.filter((rank, index) => {
+        const start = this.tabIndex * 10
+        const end = start + 9
+        return start <= index && index <= end
+      })
     }
   },
   mounted() {
@@ -158,7 +207,7 @@ export default {
        // location = res // 검색된 결과 페이지로 이동!
     },
     toggleRankingWrap(event) {
-        event.stopPropagation()
+      event.stopPropagation()
       this.isShowRankingWrap = !this.isShowRankingWrap
       if (this.isShowRankingWrap) {
         window.addEventListener('click', () => {
