@@ -11,9 +11,5 @@ export default {
       return data
     }
   }
-  // this.$fetch({
-  //   requestName: 'rankings',
-  //   abc:123,
-  //   name: 'YuYangWoo'
-  // })
+ 
 }
