@@ -138,6 +138,7 @@
 </template>
 
 <script>
+import _throttle from 'lodash/throttle'
 import Swiper from 'swiper/bundle'
 import 'swiper/css/bundle'
 import dayjs from 'dayjs'
@@ -176,6 +177,10 @@ export default {
   },
   methods: {
     async init() {
+      window.addEventListener('scroll', _throttle(event => {
+        this.isFixed = window.scrollY > 120
+      }, 100))
+
       this.rankings = await this.$fetch({
         requestName: 'rankings'
       })
@@ -194,8 +199,8 @@ export default {
       })
     },
     // actions
-    onNav() {
-      this.$store.dispatch('navigation/onNav')
+    onNav(name) {
+      this.$store.dispatch('navigation/onNav', name)
     },
     async search() {
       if (!this.searchText.trim()) return
@@ -204,7 +209,6 @@ export default {
         searchText: this.searchText
       })
       console.log('검색 결과', res)
-       // location = res // 검색된 결과 페이지로 이동!
     },
     toggleRankingWrap(event) {
       event.stopPropagation()

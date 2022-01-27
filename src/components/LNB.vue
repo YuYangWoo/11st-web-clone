@@ -1,13 +1,13 @@
 <template>
   <nav
     v-if="done"
-    :class="{ show: isShow }">
+    :class="{ show: isShowLNB }">
     <div class="user">
       <a>로그인</a>
       <div class="flex-space"></div>
       <div
         class="close-nav"
-        @click="offNav"></div>
+        @click="offNav('LNB')"></div>
     </div>
     <div
       class="container"
@@ -54,9 +54,10 @@
     </div>
   </nav>
   <div
-    v-if="isShow"
+    v-if="isShowLNB"
+    v-cloak
     class="nav-bg"
-    @click="offNav"></div>
+    @click="offNav('LNB')"></div>
 </template>
 
 <script>
@@ -69,8 +70,8 @@ export default {
     }
   },
   computed: {
-    isShow() {
-      return this.$store.state.navigation.isShow
+    isShowLNB() {
+      return this.$store.state.navigation.isShowLNB
     }
   },
   created() {
@@ -84,13 +85,13 @@ export default {
       this.done = true
       console.log(this.navigations)
     },
-    offNav() {
-      this.$store.dispatch('navigation/offNav')
+    offNav(name) {
+      this.$store.dispatch('navigation/offNav', name)
     }
   }
 }
 </script>
-<style scope lang="scss">
+<style scoped lang="scss">
  nav {
   width: 300px;
   height: 100%;
